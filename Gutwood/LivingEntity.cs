@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Shooter
 {
-    class Player
+    class LivingEntity
     {
-        public Texture2D PlayerTexture;
+        public Texture2D LivingEntityTexture;
 
         public Vector2 Position;
 
@@ -26,17 +26,17 @@ namespace Shooter
 
         public int Width
         {
-            get { return PlayerTexture.Width; }
+            get { return LivingEntityTexture.Width; }
         }
 
         public int Height
         {
-            get { return PlayerTexture.Height; }
+            get { return LivingEntityTexture.Height; }
         }
 
         public void Initialize(Texture2D texture, Vector2 position)
         {
-            PlayerTexture = texture;
+            LivingEntityTexture = texture;
 
             Position = position;
 
@@ -52,7 +52,7 @@ namespace Shooter
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(PlayerTexture, Position, null, Color.White, 0f, Vector2.Zero, Scale, directionFacing, 0f);
+            spriteBatch.Draw(LivingEntityTexture, Position, null, Color.White, 0f, Vector2.Zero, Scale, directionFacing, 0f);
         }
 
     }
