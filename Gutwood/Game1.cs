@@ -11,6 +11,7 @@ namespace Gutwood
 {
     public class Game1 : Game
     {
+        List<Bullet> killTheseBullets = new List<Bullet>();
         DateTime date;
         Random randomNumberGenerator = new Random();
         private FrameCounter _frameCounter = new FrameCounter();
@@ -67,7 +68,7 @@ namespace Gutwood
             player.Initialize(Content.Load<Texture2D>("Mario"), playerPosition);
             background.Initialize(Content.Load<Texture2D>("grass-1"), new Vector2(0, 0));
             mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
-            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250));
+            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250), isCollidable: true);
         }
 
         protected override void UnloadContent()
@@ -134,6 +135,7 @@ namespace Gutwood
                 Vector2 middleOfPlayer = new Vector2(player.Position.X+player.Width/2, player.Position.Y+player.Height/2);
                 bullets.Add(new Bullet(bulletTexture, middleOfPlayer, mousePosition));
             }
+            UpdateBullets();
         }
 
         protected override void Draw(GameTime gameTime)
@@ -157,26 +159,17 @@ namespace Gutwood
 
             //Draw text
             DrawFPS(gameTime);
-            List<Bullet> killTheseBullets = new List<Bullet>(); 
 
-            //Draw over the bullets
+            //Draw the bullets
             foreach (Bullet b in bullets)
             {
-                if(b.Position.X > GraphicsDevice.Viewport.Width || b.Position.Y > GraphicsDevice.Viewport.Height
+                if (b.Position.X > GraphicsDevice.Viewport.Width || b.Position.Y > GraphicsDevice.Viewport.Height
                     || b.Position.X < 0 || b.Position.Y < 0)
                 {
                     killTheseBullets.Add(b);
                 }
                 b.Draw(spriteBatch);
             }
-
-            //Kill off dead bullets
-            foreach (Bullet b in killTheseBullets)
-            {
-                bullets.Remove(b);
-            }
-
-            killTheseBullets.Clear();
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -195,6 +188,17 @@ namespace Gutwood
             spriteBatch.DrawString(font, date.Hour + ":" + date.Minute.ToString().PadLeft(2, '0'), new Vector2(1, 20), Color.Black);
 
             // other draw code here
+        }
+        
+
+        private void UpdateBullets()
+        {
+            //Kill off dead bullets
+            foreach (Bullet b in killTheseBullets)
+            {
+                bullets.Remove(b);
+            }
+            killTheseBullets.Clear();
         }
     }
 }

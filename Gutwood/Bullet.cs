@@ -19,7 +19,7 @@ namespace Gutwood
             destinationPosition = destination;
             this.Initialize(bulletTexture, initialPosition);
         }
-        
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             Vector2 posDelta = initialPosition - destinationPosition;

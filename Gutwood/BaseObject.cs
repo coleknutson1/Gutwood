@@ -16,9 +16,15 @@ namespace BaseObjectNamespace
 
         public bool Active;
 
+        public bool IsCollidable;
+
         public int Health;
 
         public float SpriteScale = 1f;
+        
+        //HUGE TODO: At some point, we'll want a system to create objects and manually create these rectangles
+        //Just default to image size for now
+        List<Rectangle> CollisionRectangles = new List<Rectangle>();
 
         public float Speed = 10f;
 
@@ -36,13 +42,20 @@ namespace BaseObjectNamespace
             get { return BaseObjectTexture.Height; }
         }
 
-        public void Initialize(Texture2D texture, Vector2 position)
+        public void Initialize(Texture2D texture, Vector2 position, bool isCollidable = false)
         {
+            IsCollidable = isCollidable;
+
             BaseObjectTexture = texture;
 
             Position = position;
 
             Active = true;
+
+            if(IsCollidable)
+            {
+                CollisionRectangles.Add(new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height));
+            }
         }
 
         public void Update()
