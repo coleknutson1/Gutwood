@@ -11,8 +11,6 @@ namespace Gutwood
 {
     class Bullet : BaseObject
     {
-        Random rand = new Random();
-        float DestinationX, DestinationY;
         Vector2 initialPosition, destinationPosition;
         public Bullet(Texture2D bulletTexture, Vector2 initial, Vector2 destination) //Pass in vector eventually....
         {
@@ -26,8 +24,8 @@ namespace Gutwood
             Vector2 posDelta = initialPosition - destinationPosition;
             posDelta.Normalize();
             posDelta = posDelta * Speed;
-            destinationPosition = destinationPosition + posDelta;
-            spriteBatch.Draw(BaseObjectTexture, Position, null, new Color(rand.Next(1, 255), rand.Next(1, 255), rand.Next(1, 255)), rand.Next(1,15), Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
+            Position = Position - posDelta;
+            spriteBatch.Draw(BaseObjectTexture, Position, null, Color.NavajoWhite, 1f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
         }
     }
 }

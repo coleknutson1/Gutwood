@@ -122,11 +122,12 @@ namespace Gutwood
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
 
-            Vector2 mousePosition = new Vector2(currentMouseState.X, currentMouseState.Y);
 
             if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed || currentKeyboardState.IsKeyDown(Keys.Space) && currentMouseState.LeftButton == ButtonState.Pressed)
             {
-                bullets.Add(new Bullet(bulletTexture, player.Position, mousePosition));
+                Vector2 mousePosition = new Vector2(currentMouseState.X, currentMouseState.Y);
+                Vector2 middleOfPlayer = new Vector2(player.Position.X+player.Width/2, player.Position.Y+player.Height/2);
+                bullets.Add(new Bullet(bulletTexture, middleOfPlayer, mousePosition));
             }
 
         }
