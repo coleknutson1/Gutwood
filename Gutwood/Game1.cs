@@ -11,7 +11,7 @@ namespace Gutwood
 {
     public class Game1 : Game
     {
-
+        DateTime date;
         Random randomNumberGenerator = new Random();
         private FrameCounter _frameCounter = new FrameCounter();
         private SpriteFont font;
@@ -87,41 +87,7 @@ namespace Gutwood
             mouse.Position.X = currentMouseState.X - mouse.BaseObjectTexture.Width / 2; mouse.Position.Y = currentMouseState.Y - mouse.BaseObjectTexture.Height / 2;
             UpdatePlayer();
             base.Update(gameTime);
-        }
-
-
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            background.Draw(spriteBatch);
-            mouse.Draw(spriteBatch);
-            player.Draw(spriteBatch);
-            DrawFPS(gameTime);
-            foreach (Bullet b in bullets)
-            {
-                b.Draw(spriteBatch);
-            }
-
-
-            spriteBatch.End();
-            base.Draw(gameTime);
-        }
-
-
-        protected void DrawFPS(GameTime gameTime)
-        {
-            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            _frameCounter.Update(deltaTime);
-
-            var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
-
-            spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.Black);
-
-            // other draw code here
-        }
-
+        }      
 
         public void UpdatePlayer()
         {
@@ -160,10 +126,44 @@ namespace Gutwood
 
             if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed || currentKeyboardState.IsKeyDown(Keys.Space) && currentMouseState.LeftButton == ButtonState.Pressed)
             {
-                bullets.Add(new Bullet(bulletTexture, randomNumberGenerator.Next(1, GraphicsDevice.Viewport.Width - bulletTexture.Width), randomNumberGenerator.Next(1, GraphicsDevice.Viewport.Height - bulletTexture.Height)));
+                bullets.Add(new Bullet(bulletTexture, player.Position, mousePosition));
             }
 
         }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            background.Draw(spriteBatch);
+            mouse.Draw(spriteBatch);
+            player.Draw(spriteBatch);
+            DrawFPS(gameTime);
+            foreach (Bullet b in bullets)
+            {
+                b.Draw(spriteBatch);
+            }
+
+
+            spriteBatch.End();
+            base.Draw(gameTime);
+        }
+
+
+        protected void DrawFPS(GameTime gameTime)
+        {
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            _frameCounter.Update(deltaTime);
+
+            var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
+            date = DateTime.Now;
+            spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.Black);
+            spriteBatch.DrawString(font, date.Hour + ":" + date.Minute.ToString().PadLeft(2, '0'), new Vector2(1, 20), Color.Black);
+
+            // other draw code here
+        }
+
 
 
     }
