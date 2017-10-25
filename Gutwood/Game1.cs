@@ -2,16 +2,25 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using Shooter;
+using PlayerNamespace;
+using BaseObjectNamespace;
+using System;
+using System.Collections.Generic;
 
 namespace Gutwood
 {
     public class Game1 : Game
     {
+
+        private SpriteFont font;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        LivingEntity player;
+        Player player;
+        BaseObject background;
+        BaseObject mouse;
+        List<Bullet> bullets = new List<Bullet>();
+
         KeyboardState currentKeyboardState;
         KeyboardState previousKeyboardState;
 
@@ -21,19 +30,24 @@ namespace Gutwood
         MouseState currentMouseState;
         MouseState previousMouseState;
 
-        float playerMoveSpeed;
+        
+        
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            player = new LivingEntity();
-            playerMoveSpeed = 8.0f;
+            bullets.Add(new Bullet());
+            font = Content.Load<SpriteFont>("Score");
+            player = new Player();
+            background = new BaseObject();
+            mouse = new BaseObject();
+            background.SpriteScale = 4f; //HACK FIGURE OUT ASAP!!!!
             TouchPanel.EnabledGestures = GestureType.FreeDrag;
             base.Initialize();
         }
@@ -43,12 +57,15 @@ namespace Gutwood
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y +
                 GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-            player.Initialize(Content.Load<Texture2D>("Mushroom"), playerPosition);
+            player.Initialize(Content.Load<Texture2D>("Mario"), playerPosition);
+            background.Initialize(Content.Load<Texture2D>("grass-1"), new Vector2(0, 0));
+            mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
+            bullets[0].Initialize(Content.Load<Texture2D>("Bullet"), new Vector2(220, 220));
         }
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -62,9 +79,10 @@ namespace Gutwood
 
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
-            previousMouseState = Mouse.GetState();
+            currentMouseState = Mouse.GetState();
 
-            UpdatePlayer(gameTime);
+            mouse.Position.X = currentMouseState.X - mouse.BaseObjectTexture.Width/2; mouse.Position.Y = currentMouseState.Y - mouse.BaseObjectTexture.Height/2;
+            player.UpdatePlayer(gameTime, player, GraphicsDevice, currentGamePadState, currentKeyboardState, currentMouseState);
 
             base.Update(gameTime);
         }
@@ -74,56 +92,18 @@ namespace Gutwood
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-
+            background.Draw(spriteBatch);
+            mouse.Draw(spriteBatch);
             player.Draw(spriteBatch);
+            bullets[0].Draw(spriteBatch);
+
 
             spriteBatch.End();
             base.Draw(gameTime);
         }
 
-        private void UpdatePlayer(GameTime gametime)
-        {
-            player.Position.X += currentGamePadState.ThumbSticks.Left.X * playerMoveSpeed;
-            player.Position.Y -= currentGamePadState.ThumbSticks.Left.Y * playerMoveSpeed;
 
-            if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) ||
-                 currentGamePadState.DPad.Left == ButtonState.Pressed)
-            {
-                player.Position.X -= playerMoveSpeed;
-            }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) ||
-                 currentGamePadState.DPad.Right == ButtonState.Pressed)
-            {
-                player.Position.X += playerMoveSpeed;
-            }
-
-            if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) ||
-                currentGamePadState.DPad.Up == ButtonState.Pressed)
-            {
-                player.Position.Y -= playerMoveSpeed;
-            }
-
-            if(currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) ||
-                 currentGamePadState.DPad.Down == ButtonState.Pressed)
-            {
-                player.Position.Y += playerMoveSpeed;
-            }
-
-            //Make sure we don't go out of bounds
-            player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
-            player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
-
-            Vector2 mousePosition = new Vector2(currentMouseState.X, currentMouseState.Y);
-
-            if(currentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                Vector2 posDelta = mousePosition - player.Position;
-                posDelta.Normalize();
-                posDelta = posDelta * playerMoveSpeed;
-                player.Position = player.Position + posDelta;
-            }
-
-        }
+        
     }
 }

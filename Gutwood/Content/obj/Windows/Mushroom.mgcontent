@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>C:/Workspace/Gutwood/Gutwood/Content/Mushroom.jpg</SourceFile>
-  <SourceTime>2017-10-24T17:07:28.69481-05:00</SourceTime>
+  <SourceTime>2017-10-24T19:52:03.7731211-05:00</SourceTime>
   <DestFile>C:/Workspace/Gutwood/Gutwood/Content/bin/Windows/Mushroom.xnb</DestFile>
-  <DestTime>2017-10-24T17:07:48.735501-05:00</DestTime>
+  <DestTime>2017-10-24T19:52:08.5229818-05:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T09:05:36-06:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

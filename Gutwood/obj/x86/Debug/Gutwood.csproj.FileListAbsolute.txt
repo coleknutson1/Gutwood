@@ -23,3 +23,7 @@ C:\Workspace\Gutwood\Gutwood\obj\x86\Debug\Gutwood.csprojResolveAssemblyReferenc
 C:\Workspace\Gutwood\Gutwood\obj\x86\Debug\Gutwood.exe
 C:\Workspace\Gutwood\Gutwood\obj\x86\Debug\Gutwood.pdb
 C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Mushroom.xnb
+C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Crosshair.xnb
+C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\grass-1.xnb
+C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Score.xnb
+C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Bullet.xnb

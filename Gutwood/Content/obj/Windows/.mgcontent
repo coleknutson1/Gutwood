@@ -4,7 +4,10 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Workspace/Gutwood/Gutwood/Content/grass-1.jpg</File>
     <File>C:/Workspace/Gutwood/Gutwood/Content/Mario.png</File>
-    <File>C:/Workspace/Gutwood/Gutwood/Content/Mushroom.jpg</File>
+    <File>C:/Workspace/Gutwood/Gutwood/Content/Score.spritefont</File>
+    <File>C:/Workspace/Gutwood/Gutwood/Content/Crosshair.png</File>
+    <File>C:/Workspace/Gutwood/Gutwood/Content/Bullet.png</File>
   </SourceFiles>
 </SourceFileCollection>
