@@ -129,22 +129,47 @@ namespace Gutwood
                 Vector2 middleOfPlayer = new Vector2(player.Position.X+player.Width/2, player.Position.Y+player.Height/2);
                 bullets.Add(new Bullet(bulletTexture, middleOfPlayer, mousePosition));
             }
-
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
+
+            //Begin sprite batch
             spriteBatch.Begin();
+
+            //Draw background
             background.Draw(spriteBatch);
+
+            //Draw mouse
             mouse.Draw(spriteBatch);
+
+            //Draw the player
             player.Draw(spriteBatch);
+
+            //Draw text
             DrawFPS(gameTime);
+
+            List<Bullet> killTheseBullets = new List<Bullet>(); 
+
+            //Draw over the bullets
             foreach (Bullet b in bullets)
             {
+                if(b.Position.X > GraphicsDevice.Viewport.Width || b.Position.Y > GraphicsDevice.Viewport.Height
+                    || b.Position.X < 0 || b.Position.Y < 0)
+                {
+                    killTheseBullets.Add(b);
+                }
                 b.Draw(spriteBatch);
             }
 
+            //Kill off dead bullets
+            foreach (Bullet b in killTheseBullets)
+            {
+                bullets.Remove(b);
+            }
+
+            killTheseBullets.Clear();
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -161,6 +186,7 @@ namespace Gutwood
             date = DateTime.Now;
             spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.Black);
             spriteBatch.DrawString(font, date.Hour + ":" + date.Minute.ToString().PadLeft(2, '0'), new Vector2(1, 20), Color.Black);
+            spriteBatch.DrawString(font, bullets.Count.ToString(), new Vector2(1, 30), Color.Black);
 
             // other draw code here
         }

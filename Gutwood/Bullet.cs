@@ -14,6 +14,7 @@ namespace Gutwood
         Vector2 initialPosition, destinationPosition;
         public Bullet(Texture2D bulletTexture, Vector2 initial, Vector2 destination) //Pass in vector eventually....
         {
+            Speed = 25;
             initialPosition = initial;
             destinationPosition = destination;
             this.Initialize(bulletTexture, initialPosition);
