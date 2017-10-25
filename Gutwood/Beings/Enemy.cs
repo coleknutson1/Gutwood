@@ -11,6 +11,7 @@ namespace Gutwood
 {
     class Enemy : BaseObject
     {
+        
         //Chuck D. was here
         public Enemy() {
         } 

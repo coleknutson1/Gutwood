@@ -11,7 +11,7 @@ namespace Gutwood
 {
     public class Game1 : Game
     {
-
+        private FrameCounter _frameCounter = new FrameCounter();
         private SpriteFont font;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -30,6 +30,8 @@ namespace Gutwood
         MouseState currentMouseState;
         MouseState previousMouseState;
 
+        Texture2D bulletTexture;
+
         
         
 
@@ -42,7 +44,6 @@ namespace Gutwood
 
         protected override void Initialize()
         {
-            bullets.Add(new Bullet());
             font = Content.Load<SpriteFont>("Score");
             player = new Player();
             background = new BaseObject();
@@ -54,13 +55,13 @@ namespace Gutwood
 
         protected override void LoadContent()
         {
+            bulletTexture = Content.Load<Texture2D>("Bullet");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y +
                 GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
             player.Initialize(Content.Load<Texture2D>("Mario"), playerPosition);
             background.Initialize(Content.Load<Texture2D>("grass-1"), new Vector2(0, 0));
             mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
-            bullets[0].Initialize(Content.Load<Texture2D>("Bullet"), new Vector2(220, 220));
         }
 
         protected override void UnloadContent()
@@ -82,8 +83,7 @@ namespace Gutwood
             currentMouseState = Mouse.GetState();
 
             mouse.Position.X = currentMouseState.X - mouse.BaseObjectTexture.Width/2; mouse.Position.Y = currentMouseState.Y - mouse.BaseObjectTexture.Height/2;
-            player.UpdatePlayer(gameTime, player, GraphicsDevice, currentGamePadState, currentKeyboardState, currentMouseState);
-
+            UpdatePlayer();
             base.Update(gameTime);
         }
 
@@ -95,7 +95,11 @@ namespace Gutwood
             background.Draw(spriteBatch);
             mouse.Draw(spriteBatch);
             player.Draw(spriteBatch);
-            bullets[0].Draw(spriteBatch);
+            DrawFPS(gameTime);
+            foreach (Bullet b in bullets)
+            {
+                b.Draw(spriteBatch);
+            }
 
 
             spriteBatch.End();
@@ -103,7 +107,62 @@ namespace Gutwood
         }
 
 
+        protected void DrawFPS(GameTime gameTime)
+        {
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        
+            _frameCounter.Update(deltaTime);
+
+            var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
+
+            spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.Black);
+
+            // other draw code here
+        }
+
+
+        public void UpdatePlayer()
+        {
+            player.Position.X += currentGamePadState.ThumbSticks.Left.X * player.Speed;
+            player.Position.Y -= currentGamePadState.ThumbSticks.Left.Y * player.Speed;
+
+            if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) ||
+                 currentGamePadState.DPad.Left == ButtonState.Pressed)
+            {
+                player.Position.X -= player.Speed;
+            }
+
+            if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) ||
+                 currentGamePadState.DPad.Right == ButtonState.Pressed)
+            {
+                player.Position.X += player.Speed;
+            }
+
+            if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) ||
+                currentGamePadState.DPad.Up == ButtonState.Pressed)
+            {
+                player.Position.Y -= player.Speed;
+            }
+
+            if (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) ||
+                 currentGamePadState.DPad.Down == ButtonState.Pressed)
+            {
+                player.Position.Y += player.Speed;
+            }
+
+            //Make sure we don't go out of bounds
+            player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
+            player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
+
+            Vector2 mousePosition = new Vector2(currentMouseState.X, currentMouseState.Y);
+
+            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                bullets.Add(new Bullet(bulletTexture));
+            }
+
+        }
+
+
     }
 }
