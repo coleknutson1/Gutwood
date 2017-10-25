@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 namespace Gutwood
 {
     class Bullet : BaseObject
-    { 
+    {
+        Random rand = new Random();
         float DestinationX, DestinationY;
-        public Bullet(Texture2D bulletTexture/*, Vector2 gun, Vector2 crosshair*/)
+        public Bullet(Texture2D bulletTexture, int x, int y/* Vector2 gun, Vector2 crosshair*/)
         {
-           this. Initialize(bulletTexture, new Vector2(220, 220));
+           this. Initialize(bulletTexture, new Vector2(x, y));
 
         }
         
@@ -24,7 +25,7 @@ namespace Gutwood
             //posDelta.Normalize();
             //posDelta = posDelta * Speed;
             //player.Position = player.Position + posDelta;
-            spriteBatch.Draw(BaseObjectTexture, Position, null, Color.White, 70f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(BaseObjectTexture, Position, null, new Color(rand.Next(1, 255), rand.Next(1, 255), rand.Next(1, 255)), rand.Next(1,15), Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
         }
     }
 }

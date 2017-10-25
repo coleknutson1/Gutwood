@@ -11,6 +11,8 @@ namespace Gutwood
 {
     public class Game1 : Game
     {
+
+        Random randomNumberGenerator = new Random();
         private FrameCounter _frameCounter = new FrameCounter();
         private SpriteFont font;
         GraphicsDeviceManager graphics;
@@ -32,8 +34,8 @@ namespace Gutwood
 
         Texture2D bulletTexture;
 
-        
-        
+
+
 
         public Game1()
         {
@@ -66,7 +68,7 @@ namespace Gutwood
 
         protected override void UnloadContent()
         {
-            
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -82,7 +84,7 @@ namespace Gutwood
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
             currentMouseState = Mouse.GetState();
 
-            mouse.Position.X = currentMouseState.X - mouse.BaseObjectTexture.Width/2; mouse.Position.Y = currentMouseState.Y - mouse.BaseObjectTexture.Height/2;
+            mouse.Position.X = currentMouseState.X - mouse.BaseObjectTexture.Width / 2; mouse.Position.Y = currentMouseState.Y - mouse.BaseObjectTexture.Height / 2;
             UpdatePlayer();
             base.Update(gameTime);
         }
@@ -156,9 +158,9 @@ namespace Gutwood
 
             Vector2 mousePosition = new Vector2(currentMouseState.X, currentMouseState.Y);
 
-            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
+            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed || currentKeyboardState.IsKeyDown(Keys.Space) && currentMouseState.LeftButton == ButtonState.Pressed)
             {
-                bullets.Add(new Bullet(bulletTexture));
+                bullets.Add(new Bullet(bulletTexture, randomNumberGenerator.Next(1, GraphicsDevice.Viewport.Width - bulletTexture.Width), randomNumberGenerator.Next(1, GraphicsDevice.Viewport.Height - bulletTexture.Height)));
             }
 
         }
