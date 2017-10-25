@@ -21,6 +21,8 @@ namespace Gutwood
         Player player;
         BaseObject background;
         BaseObject mouse;
+        BaseObject tree;
+
         List<Bullet> bullets = new List<Bullet>();
 
         KeyboardState currentKeyboardState;
@@ -50,6 +52,7 @@ namespace Gutwood
             player = new Player();
             background = new BaseObject();
             mouse = new BaseObject();
+            tree = new BaseObject();
             background.SpriteScale = 4f; //HACK FIGURE OUT ASAP!!!!
             TouchPanel.EnabledGestures = GestureType.FreeDrag;
             base.Initialize();
@@ -64,6 +67,7 @@ namespace Gutwood
             player.Initialize(Content.Load<Texture2D>("Mario"), playerPosition);
             background.Initialize(Content.Load<Texture2D>("grass-1"), new Vector2(0, 0));
             mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
+            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250));
         }
 
         protected override void UnloadContent()
@@ -94,36 +98,37 @@ namespace Gutwood
             player.Position.X += currentGamePadState.ThumbSticks.Left.X * player.Speed;
             player.Position.Y -= currentGamePadState.ThumbSticks.Left.Y * player.Speed;
 
-            if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) ||
-                 currentGamePadState.DPad.Left == ButtonState.Pressed)
-            {
-                player.Position.X -= player.Speed;
-            }
+            if (currentMouseState.RightButton == ButtonState.Released) {
+                if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) ||
+                     currentGamePadState.DPad.Left == ButtonState.Pressed)
+                {
+                    player.Position.X -= player.Speed;
+                }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) ||
-                 currentGamePadState.DPad.Right == ButtonState.Pressed)
-            {
-                player.Position.X += player.Speed;
-            }
+                if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) ||
+                     currentGamePadState.DPad.Right == ButtonState.Pressed)
+                {
+                    player.Position.X += player.Speed;
+                }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) ||
-                currentGamePadState.DPad.Up == ButtonState.Pressed)
-            {
-                player.Position.Y -= player.Speed;
-            }
+                if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) ||
+                    currentGamePadState.DPad.Up == ButtonState.Pressed)
+                {
+                    player.Position.Y -= player.Speed;
+                }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) ||
-                 currentGamePadState.DPad.Down == ButtonState.Pressed)
-            {
-                player.Position.Y += player.Speed;
+                if (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) ||
+                     currentGamePadState.DPad.Down == ButtonState.Pressed)
+                {
+                    player.Position.Y += player.Speed;
+                }
             }
-
             //Make sure we don't go out of bounds
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
 
 
-            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed || currentKeyboardState.IsKeyDown(Keys.Space) && currentMouseState.LeftButton == ButtonState.Pressed)
+            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed && currentMouseState.RightButton == ButtonState.Pressed)
             {
                 Vector2 mousePosition = new Vector2(currentMouseState.X, currentMouseState.Y);
                 Vector2 middleOfPlayer = new Vector2(player.Position.X+player.Width/2, player.Position.Y+player.Height/2);
@@ -144,12 +149,14 @@ namespace Gutwood
             //Draw mouse
             mouse.Draw(spriteBatch);
 
+            //Draw a debugging tree
+            tree.Draw(spriteBatch);
+
             //Draw the player
             player.Draw(spriteBatch);
 
             //Draw text
             DrawFPS(gameTime);
-
             List<Bullet> killTheseBullets = new List<Bullet>(); 
 
             //Draw over the bullets
@@ -186,12 +193,8 @@ namespace Gutwood
             date = DateTime.Now;
             spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.Black);
             spriteBatch.DrawString(font, date.Hour + ":" + date.Minute.ToString().PadLeft(2, '0'), new Vector2(1, 20), Color.Black);
-            spriteBatch.DrawString(font, bullets.Count.ToString(), new Vector2(1, 30), Color.Black);
 
             // other draw code here
         }
-
-
-
     }
 }

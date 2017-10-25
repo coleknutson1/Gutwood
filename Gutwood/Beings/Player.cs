@@ -14,9 +14,8 @@ namespace PlayerNamespace
     class Player : BaseObject
     {
         public Player()
-        {}
-        
-
-
+        {
+            Speed = 5;
+        }
     }
 }
