@@ -12,6 +12,8 @@ namespace Gutwood
     public class Game1 : Game
     {
         List<Bullet> killTheseBullets = new List<Bullet>();
+        List<List<Rectangle>> allCollisiodnRectangles = new List<List<Rectangle>>();
+        List<List<Rectangle>> allCollisionRectangles = new List<List<Rectangle>>();
         DateTime date;
         Random randomNumberGenerator = new Random();
         private FrameCounter _frameCounter = new FrameCounter();
@@ -68,7 +70,7 @@ namespace Gutwood
             player.Initialize(Content.Load<Texture2D>("Mario"), playerPosition);
             background.Initialize(Content.Load<Texture2D>("grass-1"), new Vector2(0, 0));
             mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
-            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250), isCollidable: true);
+            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250),  "Tree", isCollidable: true);
         }
 
         protected override void UnloadContent()
@@ -90,7 +92,13 @@ namespace Gutwood
             currentMouseState = Mouse.GetState();
 
             mouse.Position.X = currentMouseState.X - mouse.BaseObjectTexture.Width / 2; mouse.Position.Y = currentMouseState.Y - mouse.BaseObjectTexture.Height / 2;
+
+            //HACK FOR TESTING COLLISION ALGORITHM!
+            allCollisionRectangles.Add(tree.CollisionRectangles);
+            player.UpdateCollision(allCollisionRectangles);
+            
             UpdatePlayer();
+
             base.Update(gameTime);
         }      
 
@@ -100,26 +108,26 @@ namespace Gutwood
             player.Position.Y -= currentGamePadState.ThumbSticks.Left.Y * player.Speed;
 
             if (currentMouseState.RightButton == ButtonState.Released) {
-                if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) ||
-                     currentGamePadState.DPad.Left == ButtonState.Pressed)
+                if (!player.CollidingLeft && (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) ||
+                     currentGamePadState.DPad.Left == ButtonState.Pressed))
                 {
                     player.Position.X -= player.Speed;
                 }
 
-                if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) ||
-                     currentGamePadState.DPad.Right == ButtonState.Pressed)
+                if (!player.CollidingRight && (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) ||
+                     currentGamePadState.DPad.Right == ButtonState.Pressed))
                 {
                     player.Position.X += player.Speed;
                 }
 
-                if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) ||
-                    currentGamePadState.DPad.Up == ButtonState.Pressed)
+                if (!player.CollidingTop && (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) ||
+                    currentGamePadState.DPad.Up == ButtonState.Pressed))
                 {
                     player.Position.Y -= player.Speed;
                 }
 
-                if (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) ||
-                     currentGamePadState.DPad.Down == ButtonState.Pressed)
+                if (!player.CollidingBottom && (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) ||
+                     currentGamePadState.DPad.Down == ButtonState.Pressed))
                 {
                     player.Position.Y += player.Speed;
                 }
@@ -186,6 +194,7 @@ namespace Gutwood
             date = DateTime.Now;
             spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.Black);
             spriteBatch.DrawString(font, date.Hour + ":" + date.Minute.ToString().PadLeft(2, '0'), new Vector2(1, 20), Color.Black);
+            spriteBatch.DrawString(font, $"UP {player.CollidingTop} \nDOWN {player.CollidingBottom} \nLEFT {player.CollidingLeft} \nRIGHT{player.CollidingRight}", new Vector2(1, 50), Color.Black);
 
             // other draw code here
         }
