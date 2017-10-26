@@ -141,6 +141,33 @@ namespace PlayerNamespace
                     }
                     if (blockPlayerCollidingRight && blockPlayerCollidingUp)
                     {
+                        right = Math.Abs(Position.X + Width - collidableObject.Left);
+                        up = Math.Abs(Position.Y - collidableObject.Bottom);
+                        if(up < right)
+                        {
+                            CollidingTop = true;
+                            continue;
+                        }
+                        else
+                        {
+                            CollidingRight = true;
+                            continue;
+                        }
+                    }
+                    if (blockPlayerCollidingLeft && blockPlayerCollidingUp)
+                    {
+                        left = Math.Abs(Position.X - collidableObject.Right);
+                        up = Math.Abs(Position.Y - collidableObject.Bottom);
+                        if (up < left)
+                        {
+                            CollidingTop = true;
+                            continue;
+                        }
+                        else
+                        {
+                            CollidingLeft = true;
+                            continue;
+                        }
                     }
                     if (blockPlayerCollidingUp)
                     {
