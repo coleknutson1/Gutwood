@@ -20,6 +20,7 @@ namespace Gutwood
         private SpriteFont font;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        int CurrentDirection;
 
         Player player;
         BaseObject background;
@@ -111,32 +112,43 @@ namespace Gutwood
 
         public void UpdatePlayer()
         {
-            //HUGE TODO: Get thumbstick working and only allowing 8 cardinal directions
+
+            player.IsRunning = currentKeyboardState.IsKeyDown(Keys.LeftShift) ? false : true;
             if (currentMouseState.RightButton == ButtonState.Released) {
                 if (!player.CollidingLeft && (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) ||
-                     currentGamePadState.DPad.Left == ButtonState.Pressed))
+                     currentGamePadState.DPad.Left == ButtonState.Pressed || (currentGamePadState.ThumbSticks.Left.X >= -1 && currentGamePadState.ThumbSticks.Left.X < -.3)))
                 {
                     player.Position.X -= player.Speed;
                 }
 
                 if (!player.CollidingRight && (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) ||
-                     currentGamePadState.DPad.Right == ButtonState.Pressed))
+                     currentGamePadState.DPad.Right == ButtonState.Pressed || (currentGamePadState.ThumbSticks.Left.X <= 1 && currentGamePadState.ThumbSticks.Left.X > .3)))
                 {
                     player.Position.X += player.Speed;
                 }
 
                 if (!player.CollidingTop && (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) ||
-                    currentGamePadState.DPad.Up == ButtonState.Pressed))
+                    currentGamePadState.DPad.Up == ButtonState.Pressed || (currentGamePadState.ThumbSticks.Left.Y <= 1 && currentGamePadState.ThumbSticks.Left.Y > .3)))
                 {
                     player.Position.Y -= player.Speed;
                 }
 
                 if (!player.CollidingBottom && (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) ||
-                     currentGamePadState.DPad.Down == ButtonState.Pressed))
+                     currentGamePadState.DPad.Down == ButtonState.Pressed || (currentGamePadState.ThumbSticks.Left.Y >= -1 && currentGamePadState.ThumbSticks.Left.Y < -.3)))
                 {
                     player.Position.Y += player.Speed;
                 }
             }
+
+            if(player.IsRunning)
+            {
+                player.Speed = 5;
+            }
+            else
+            {
+                player.Speed = 3;
+            }
+
             //Make sure we don't go out of bounds
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
@@ -200,7 +212,7 @@ namespace Gutwood
             date = DateTime.Now;
             spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.Black);
             spriteBatch.DrawString(font, date.Hour + ":" + date.Minute.ToString().PadLeft(2, '0'), new Vector2(1, 20), Color.Black);
-            spriteBatch.DrawString(font, $"UP {player.CollidingTop} \nDOWN {player.CollidingBottom} \nLEFT {player.CollidingLeft} \nRIGHT{player.CollidingRight}", new Vector2(1, 50), Color.Black);
+            spriteBatch.DrawString(font, currentGamePadState.ThumbSticks.Left.ToString(), new Vector2(1, 50), Color.Black);
 
             // other draw code here
         }
@@ -214,6 +226,27 @@ namespace Gutwood
                 bullets.Remove(b);
             }
             killTheseBullets.Clear();
+        }
+
+        private void CheckThumbsticks()
+        {
+            player.movingDown = player.movingLeft = player.movingRight = player.movingUp = false;
+            if (currentGamePadState.ThumbSticks.Left.Y == 1)
+            {
+                player.movingUp = true;
+            }
+            if (currentGamePadState.ThumbSticks.Left.Y == -1)
+            {
+                player.movingDown = true;
+            }
+            if (currentGamePadState.ThumbSticks.Left.X == 1)
+            {
+                player.movingRight = true;
+            }
+            if (currentGamePadState.ThumbSticks.Left.X == -1)
+            {
+                player.movingLeft = true;
+            }
         }
     }
 }

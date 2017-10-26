@@ -15,10 +15,11 @@ namespace PlayerNamespace
     {
         public bool CollidingLeft, CollidingRight, CollidingTop, CollidingBottom;
         public bool blockPlayerCollidingLeft, blockPlayerCollidingRight, blockPlayerCollidingUp, blockPlayerCollidingDown;
+        public bool movingUp, movingLeft, movingRight, movingDown, IsRunning;
         public Player()
         {
             CollidingLeft = CollidingRight = CollidingTop = CollidingBottom = false;
-            Speed = 5;
+            Speed = 2;
         }
 
         public void UpdateCollision(List<List<Rectangle>> collidableObjectsLists)
