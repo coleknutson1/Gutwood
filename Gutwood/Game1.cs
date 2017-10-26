@@ -25,6 +25,7 @@ namespace Gutwood
         BaseObject background;
         BaseObject mouse;
         BaseObject tree;
+        BaseObject tree2;
 
         List<Bullet> bullets = new List<Bullet>();
 
@@ -56,6 +57,7 @@ namespace Gutwood
             background = new BaseObject();
             mouse = new BaseObject();
             tree = new BaseObject();
+            tree2 = new BaseObject();
             background.SpriteScale = 4f; //HACK FIGURE OUT ASAP!!!!
             TouchPanel.EnabledGestures = GestureType.FreeDrag;
             base.Initialize();
@@ -70,7 +72,8 @@ namespace Gutwood
             player.Initialize(Content.Load<Texture2D>("Mario"), playerPosition);
             background.Initialize(Content.Load<Texture2D>("grass-1"), new Vector2(0, 0));
             mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
-            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250),  "Tree", isCollidable: true);
+            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250), "Tree", isCollidable: true);
+            tree2.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(500, 100), "Tree2", isCollidable: true);
         }
 
         protected override void UnloadContent()
@@ -93,8 +96,12 @@ namespace Gutwood
 
             mouse.Position.X = currentMouseState.X - mouse.BaseObjectTexture.Width / 2; mouse.Position.Y = currentMouseState.Y - mouse.BaseObjectTexture.Height / 2;
 
+
             //HACK FOR TESTING COLLISION ALGORITHM!
+            //
+
             allCollisionRectangles.Add(tree.CollisionRectangles);
+            allCollisionRectangles.Add(tree2.CollisionRectangles);
             player.UpdateCollision(allCollisionRectangles);
             
             UpdatePlayer();
@@ -104,9 +111,7 @@ namespace Gutwood
 
         public void UpdatePlayer()
         {
-            player.Position.X += currentGamePadState.ThumbSticks.Left.X * player.Speed;
-            player.Position.Y -= currentGamePadState.ThumbSticks.Left.Y * player.Speed;
-
+            //HUGE TODO: Get thumbstick working and only allowing 8 cardinal directions
             if (currentMouseState.RightButton == ButtonState.Released) {
                 if (!player.CollidingLeft && (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) ||
                      currentGamePadState.DPad.Left == ButtonState.Pressed))
@@ -161,6 +166,7 @@ namespace Gutwood
 
             //Draw a debugging tree
             tree.Draw(spriteBatch);
+            tree2.Draw(spriteBatch);
 
             //Draw the player
             player.Draw(spriteBatch);
