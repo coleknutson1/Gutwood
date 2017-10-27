@@ -12,7 +12,6 @@ namespace Gutwood
     public class Game1 : Game
     {
         List<Bullet> killTheseBullets = new List<Bullet>();
-        List<List<Rectangle>> allCollisiodnRectangles = new List<List<Rectangle>>();
         List<List<Rectangle>> allCollisionRectangles = new List<List<Rectangle>>();
         DateTime date;
         Random randomNumberGenerator = new Random();
@@ -20,9 +19,9 @@ namespace Gutwood
         private SpriteFont font;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Rectangle mainFrame;
 
         Player player;
-        BaseObject background;
         BaseObject mouse;
         BaseObject tree;
         BaseObject tree2;
@@ -39,9 +38,7 @@ namespace Gutwood
         MouseState previousMouseState;
 
         Texture2D bulletTexture;
-
-
-
+        Texture2D background;
 
         public Game1()
         {
@@ -52,9 +49,9 @@ namespace Gutwood
 
         protected override void Initialize()
         {
+            mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             font = Content.Load<SpriteFont>("Score");
             player = new Player();
-            background = new BaseObject();
             mouse = new BaseObject();
             tree = new BaseObject();
             tree2 = new BaseObject();
@@ -71,7 +68,7 @@ namespace Gutwood
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y +
                 GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
             player.Initialize(Content.Load<Texture2D>("Mario"), playerPosition);
-            background.Initialize(Content.Load<Texture2D>("Background"), new Vector2(0, 0));
+            background = Content.Load<Texture2D>("Background");
             mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
             tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250), "Tree", isCollidable: true);
             tree2.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(500, 100), "Tree2", isCollidable: true);
@@ -103,7 +100,7 @@ namespace Gutwood
             spriteBatch.Begin();
 
             //Draw background
-            background.Draw(spriteBatch);
+            spriteBatch.Draw(background, mainFrame, Color.White);
 
             //Draw mouse
             mouse.Draw(spriteBatch);
@@ -122,7 +119,7 @@ namespace Gutwood
             foreach (Bullet b in bullets)
             {
                 if (b.Position.X > GraphicsDevice.Viewport.Width || b.Position.Y > GraphicsDevice.Viewport.Height
-                    || b.Position.X < 0 || b.Position.Y < 0)
+                    || b.Position.X < 0 || b.Position.Y < 0 || b.UpdateCollision(allCollisionRectangles))
                 {
                     killTheseBullets.Add(b);
                 }
@@ -146,7 +143,6 @@ namespace Gutwood
             spriteBatch.DrawString(font, date.Hour + ":" + date.Minute.ToString().PadLeft(2, '0'), new Vector2(1, 20), Color.Black);
             spriteBatch.DrawString(font, currentGamePadState.ThumbSticks.Left.ToString(), new Vector2(1, 50), Color.Black);
 
-            // other draw code here
         }
         
 

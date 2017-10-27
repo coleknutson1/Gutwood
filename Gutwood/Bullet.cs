@@ -28,5 +28,24 @@ namespace Gutwood
             Position = Position - posDelta;
             spriteBatch.Draw(BaseObjectTexture, Position, null, Color.NavajoWhite, 1f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
         }
+
+        public bool UpdateCollision(List<List<Rectangle>> collidableObjectsLists)
+        {
+            foreach (List<Rectangle> collidableObjectsList in collidableObjectsLists)
+            {
+                foreach (Rectangle collidableObject in collidableObjectsList)
+                {
+                    if (Position.X <= collidableObject.Right && Position.X > collidableObject.Center.X && Position.Y + Height >= collidableObject.Top && Position.Y <= collidableObject.Bottom)
+                    { return true; }
+                    if (Position.X + Width >= collidableObject.Left && Position.X < collidableObject.Center.X && Position.Y + Height >= collidableObject.Top && Position.Y <= collidableObject.Bottom)
+                    { return true; }
+                    if (Position.Y <= collidableObject.Bottom && Position.Y > collidableObject.Center.Y && Position.X + Width >= collidableObject.Left && Position.X <= collidableObject.Right)
+                    { return true; }
+                    if (Position.Y + Height >= collidableObject.Top && Position.Y + Height <= collidableObject.Bottom && Position.X + Width >= collidableObject.Left && Position.X <= collidableObject.Right)
+                    { return true; }
+                }
+            }
+            return false;
+        }
     }
 }
