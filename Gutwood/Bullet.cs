@@ -35,14 +35,13 @@ namespace Gutwood
             {
                 foreach (Rectangle collidableObject in collidableObjectsList)
                 {
-                    if (Position.X <= collidableObject.Right && Position.X > collidableObject.Center.X && Position.Y + Height >= collidableObject.Top && Position.Y <= collidableObject.Bottom)
-                    { return true; }
-                    if (Position.X + Width >= collidableObject.Left && Position.X < collidableObject.Center.X && Position.Y + Height >= collidableObject.Top && Position.Y <= collidableObject.Bottom)
-                    { return true; }
-                    if (Position.Y <= collidableObject.Bottom && Position.Y > collidableObject.Center.Y && Position.X + Width >= collidableObject.Left && Position.X <= collidableObject.Right)
-                    { return true; }
-                    if (Position.Y + Height >= collidableObject.Top && Position.Y + Height <= collidableObject.Bottom && Position.X + Width >= collidableObject.Left && Position.X <= collidableObject.Right)
-                    { return true; }
+                    if ((Position.X <= collidableObject.Right && Position.X > collidableObject.Center.X && Position.Y + Height >= collidableObject.Top && Position.Y <= collidableObject.Bottom)
+                     || (Position.X + Width >= collidableObject.Left && Position.X < collidableObject.Center.X && Position.Y + Height >= collidableObject.Top && Position.Y <= collidableObject.Bottom)
+                     || (Position.Y <= collidableObject.Bottom && Position.Y > collidableObject.Center.Y && Position.X + Width >= collidableObject.Left && Position.X <= collidableObject.Right)
+                     || (Position.Y + Height >= collidableObject.Top && Position.Y + Height <= collidableObject.Bottom && Position.X + Width >= collidableObject.Left && Position.X <= collidableObject.Right))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

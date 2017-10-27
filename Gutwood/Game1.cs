@@ -123,7 +123,10 @@ namespace Gutwood
                 {
                     killTheseBullets.Add(b);
                 }
-                b.Draw(spriteBatch);
+                else
+                {
+                    b.Draw(spriteBatch);
+                }                
             }
 
             spriteBatch.End();
