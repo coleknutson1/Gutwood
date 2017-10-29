@@ -67,7 +67,7 @@ namespace Gutwood
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y +
                 GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-            player.Initialize(Content.Load<Texture2D>("Mario"), playerPosition);
+            player.Initialize(Content.Load<Texture2D>("LumberJack"), playerPosition);
             background = Content.Load<Texture2D>("Background");
             mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
             tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250), "Tree", isCollidable: true);
