@@ -11,6 +11,7 @@ namespace Gutwood
 {
     public class Game1 : Game
     {
+        Game game1;
         List<Bullet> killTheseBullets = new List<Bullet>();
         List<List<Rectangle>> allCollisionRectangles = new List<List<Rectangle>>();
         DateTime date;
@@ -20,6 +21,7 @@ namespace Gutwood
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Rectangle mainFrame;
+        RectangleOverlay collisionRectangle; //For use with eventual dynamic collision
 
         Player player;
         BaseObject mouse;
@@ -49,12 +51,14 @@ namespace Gutwood
 
         protected override void Initialize()
         {
+            
             mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             font = Content.Load<SpriteFont>("Score");
             player = new Player();
             mouse = new BaseObject();
             tree = new BaseObject();
             tree2 = new BaseObject();
+            
             TouchPanel.EnabledGestures = GestureType.FreeDrag;
             base.Initialize();
         }
@@ -63,6 +67,9 @@ namespace Gutwood
         {
             allCollisionRectangles.Add(tree.CollisionRectangles);
             allCollisionRectangles.Add(tree2.CollisionRectangles);
+            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250), "Tree", isCollidable: true);
+            tree2.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(500, 100), "Tree2", isCollidable: true);
+            collisionRectangle = new RectangleOverlay(allCollisionRectangles[0][0], Color.Red, game1);
             bulletTexture = Content.Load<Texture2D>("Bullet");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y +
@@ -70,8 +77,7 @@ namespace Gutwood
             player.Initialize(Content.Load<Texture2D>("LumberJack"), playerPosition);
             background = Content.Load<Texture2D>("Background");
             mouse.Initialize(Content.Load<Texture2D>("crosshair"), new Vector2(0, 0));
-            tree.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(250, 250), "Tree", isCollidable: true);
-            tree2.Initialize(Content.Load<Texture2D>("Tree"), new Vector2(500, 100), "Tree2", isCollidable: true);
+
         }
 
         protected override void UnloadContent()
@@ -128,6 +134,7 @@ namespace Gutwood
                     b.Draw(spriteBatch);
                 }                
             }
+            collisionRectangle.Draw(gameTime);
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -266,7 +273,7 @@ namespace Gutwood
 
         private void InitializeEnvironment()
         {
-
+            
         }
 
         private void InitializePlayer()

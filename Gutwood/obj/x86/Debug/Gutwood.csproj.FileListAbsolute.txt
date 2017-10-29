@@ -1,6 +1,8 @@
+C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Background.xnb
 C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Bullet.xnb
 C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Crosshair.xnb
 C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\grass-1.xnb
+C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\LumberJack.xnb
 C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Mario.xnb
 C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Mushroom.xnb
 C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Score.xnb
@@ -27,6 +29,3 @@ C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\SharpDX.XInput.xml
 C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\SharpDX.Direct3D9.xml
 C:\Workspace\Gutwood\Gutwood\obj\x86\Debug\Gutwood.exe
 C:\Workspace\Gutwood\Gutwood\obj\x86\Debug\Gutwood.pdb
-C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\Background.xnb
-C:\Workspace\Gutwood\Gutwood\obj\x86\Debug\Gutwood.csprojResolveAssemblyReference.cache
-C:\Workspace\Gutwood\Gutwood\bin\Windows\x86\Debug\Content\LumberJack.xnb
